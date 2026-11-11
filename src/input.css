@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+
+@font-face {
+  font-family: "Montserrat:Bold";
+  src: url("https://static.figma.com/font/Montserrat_wght__2") format("woff2");
+  font-style: normal;
+  font-weight: 700;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    background: #fff;
+    font-family: "Helvetica:Regular", Helvetica, Arial, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  strong,
+  button {
+    font-family: "Helvetica:Bold", Helvetica, Arial, sans-serif;
+  }
+
+  a,
+  button {
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+  }
+
+  a:hover {
+    opacity: 0.82;
+  }
+
+  :focus-visible {
+    outline: 3px solid rgba(123, 104, 238, 0.45);
+    outline-offset: 3px;
+  }
+}

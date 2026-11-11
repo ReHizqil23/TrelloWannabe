@@ -1,0 +1,3 @@
+# Trello Wannabe
+
+Trello Wannabe adalah aplikasi web manajemen tugas bergaya Kanban Board yang terinspirasi dari Trello, dirancang untuk membantu pengguna mengelola alur kerja secara visual dan terstruktur. Project ini dibangun menggunakan HTML dan Tailwind CSS untuk antarmuka yang modern serta responsif, dengan rencana integrasi JavaScript dan backend Python untuk fungsionalitas CRUD yang dinamis.
