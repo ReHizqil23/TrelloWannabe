@@ -12,6 +12,7 @@ export default function Sidebar() {
     { id: 5, label: 'Chat', to: '/chat' },
     { id: 6, label: 'Goals', to: '/goals' },
     { id: 7, label: 'Whiteboards', to: '/whiteboards' },
+    { id: 8, label: 'Team', to: '/team' },
   ];
 
   return (

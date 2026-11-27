@@ -7,12 +7,12 @@ import ChatPage from "./pages/ChatPage";
 import DocsPage from "./pages/DocsPage";
 import WhiteboardsPage from "./pages/Whiteboardspage";
 import GoalsPage from "./pages/GoalsPage";
+import TeamPage from "./pages/teamPage";
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Route untuk setiap halaman */}
         <Route path="/" element={<LandingPage />} />
 
       <Route element={<Layout />}>  
@@ -22,6 +22,7 @@ export default function App() {
         <Route path="/chat" element={<ChatPage />} />
         <Route path="/whiteboards" element={<WhiteboardsPage/>} />
         <Route path="/goals" element={<GoalsPage />} />
+        <Route path="/team" element={<TeamPage />} />
       </Route>
       </Routes>
     </Router>
