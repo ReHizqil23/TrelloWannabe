@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { teamMembers } from '../data/teamMembers'; // Import data tim
 
 export default function TasksPage() {
+  const [teamMembers, setTeamMembers] = useState(() => {
+    const saved = localStorage.getItem('trello_wannabe_team');
+    return saved ? JSON.parse(saved) : []; 
+  });
   const [tasks, setTasks] = useState(() => {
     const savedTasks = localStorage.getItem('trello_wannabe_tasks');
     if (savedTasks) return JSON.parse(savedTasks);
@@ -11,14 +14,16 @@ export default function TasksPage() {
       { id: 3, title: 'Budget assessment', status: 'review', stage: 'Execution', assignee: 'm2' },
     ];
   });
+ 
 
   // State untuk form input
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newAssignee, setNewAssignee] = useState("");
 
   useEffect(() => {
-    localStorage.setItem('trello_wannabe_tasks', JSON.stringify(tasks));
-  }, [tasks]);
+  const saved = localStorage.getItem('trello_wannabe_team');
+  if (saved) setTeamMembers(JSON.parse(saved));
+  }, []);
 
   const handleAddTask = (e) => {
     e.preventDefault();

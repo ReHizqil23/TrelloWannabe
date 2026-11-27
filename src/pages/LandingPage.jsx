@@ -1,8 +1,5 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Counter from '../components/Counter';
-import TodoList from '../components/TodoList';
-import FetchData from '../components/FetchData';
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -181,21 +178,6 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
-
-      {/* SECTION TUGAS REACT HOOKS (Biar tugas dosen tetap ada) */}
-      <section className="bg-gray-100 py-16 border-t border-gray-200">
-        <div className="max-w-[1220px] mx-auto px-5">
-          <h2 className="text-3xl font-extrabold text-center mb-2 text-gray-800">Implementasi React Hooks</h2>
-          <p className="text-center text-gray-500 mb-10">Tugas Eksplorasi useState dan useEffect</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Counter />
-            <TodoList />
-            <FetchData />
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

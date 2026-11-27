@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 const defaultNotes = [
-  { id: 1, text: 'Ide fitur baru: Dark Mode 🌙', color: 'bg-yellow-200', rotate: '-rotate-2' },
+  { id: 1, text: 'Ide fitur baru: Dark Mode', color: 'bg-yellow-200', rotate: '-rotate-2' },
   { id: 2, text: 'Revisi UI Landing Page', color: 'bg-pink-200', rotate: 'rotate-2' },
   { id: 3, text: 'Tanya dosen soal API', color: 'bg-blue-200', rotate: '-rotate-1' },
 ];
