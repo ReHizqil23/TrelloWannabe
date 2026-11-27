@@ -8,13 +8,15 @@ import DocsPage from "./pages/DocsPage";
 import WhiteboardsPage from "./pages/Whiteboardspage";
 import GoalsPage from "./pages/GoalsPage";
 import TeamPage from "./pages/teamPage";
+import LoginPage from "./pages/LoginPage";
+
 
 export default function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-
+        <Route path="/login" element={<LoginPage />} />
       <Route element={<Layout />}>  
         <Route path="/tasks" element={<TasksPage />} />
         <Route path="dashboards" element={<DashboardsPage />} />

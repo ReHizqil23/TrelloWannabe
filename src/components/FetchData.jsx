@@ -5,27 +5,47 @@ export default function FetchData() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data);
-        setLoading(false);
-      });
+    const timer = setTimeout(() => {
+      const savedTeam = localStorage.getItem('trello_wannabe_team');
+      
+      if (savedTeam) {
+        setUsers(JSON.parse(savedTeam));
+      } else {
+        setUsers([]);
+      }
+      
+      setLoading(false); 
+    }, 500);
+
+    // Cleanup function
+    return () => clearTimeout(timer);
   }, []); 
 
   return (
-    <div className="p-6 bg-white rounded-xl shadow-md border border-gray-200">
-      <h2 className="text-xl font-bold mb-4 text-gray-800">3. Fetch Data Dummy</h2>
+    <div className="w-full">
       {loading ? (
-        <p className="text-[#7b68ee] font-bold animate-pulse">Sedang memuat data dari API...</p>
+        <div className="text-center py-8">
+          <p className="text-[#7b68ee] font-bold animate-pulse">Memuat data tim...</p>
+        </div>
       ) : (
-        <ul className="space-y-2 max-h-40 overflow-y-auto pr-2">
-          {users.slice(0, 5).map(user => (
-            <li key={user.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-              <span className="font-bold text-gray-800">{user.name}</span> <br/>
-              <span className="text-xs text-gray-500">{user.email}</span>
-            </li>
-          ))}
+        <ul className="space-y-3">
+          {users.length === 0 ? (
+            <p className="text-sm text-gray-500 italic text-center py-4">Belum ada anggota tim. Tambah di halaman Team.</p>
+          ) : (
+            users.slice(0, 5).map((member) => (
+              <li key={member.id} className="p-3 bg-gray-50 rounded-lg border border-gray-100 flex items-center gap-3">
+                {/* Tampilkan Avatar */}
+                {member.avatar && (
+                  <img src={member.avatar} alt={member.name} className="w-8 h-8 rounded-full bg-gray-200" />
+                )}
+                <div className="min-w-0">
+                  {/* Tampilkan Nama & Role/Divisi (bukan email) */}
+                  <p className="font-bold text-sm text-gray-800 truncate">{member.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{member.role} &bull; {member.division}</p>
+                </div>
+              </li>
+            ))
+          )}
         </ul>
       )}
     </div>
