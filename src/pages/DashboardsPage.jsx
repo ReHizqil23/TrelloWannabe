@@ -8,25 +8,6 @@ export default function DashboardsPage() {
       {/* Container Melayang */}
       <div className="mx-auto flex h-[calc(100vh-48px)] min-h-[720px] max-w-[1150px] overflow-hidden rounded-3xl bg-[#f6f7fb] shadow-xl">
         
-        {/* SIDEBAR KIRI */}
-        <aside className="flex h-full w-[220px] shrink-0 flex-col rounded-l-3xl bg-white pt-6">
-          <Link to="/" className="mb-5 flex items-center gap-2 px-6">
-            <svg className="h-7 w-7 text-[#7b68ee]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2V7h2v10zm5 0h-2V7h2v10z"/>
-            </svg>
-            <span className="text-lg font-extrabold tracking-tight text-[#2a2e34]">Trello Wannabe</span>
-          </Link>
-
-          <nav className="flex flex-col gap-1 px-6 pb-4 text-[15px] text-[#3d424a]">
-            <Link to="/" className="flex items-center gap-3 py-2 hover:text-[#7b68ee]">Home</Link>
-            <Link to="/tasks" className="flex items-center gap-3 py-2 hover:text-[#7b68ee]">Tasks</Link>
-            <Link to="/dashboards" className="flex items-center gap-3 py-2 font-bold text-[#7b68ee]">Dashboards</Link>
-            <Link to="/docs" className="flex items-center gap-3 py-2 hover:text-[#7b68ee]">Docs</Link>
-            <Link to="/chat" className="flex items-center gap-3 py-2 hover:text-[#7b68ee]">Chat</Link>
-          </nav>
-        </aside>
-
-        {/* KONTEN UTAMA */}
         <main className="flex-1 overflow-y-auto bg-[#f8f9fc]">
           
           {/* Header */}

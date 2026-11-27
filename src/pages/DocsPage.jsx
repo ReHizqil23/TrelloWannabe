@@ -1,303 +1,160 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Counter from '../components/Counter';
-import FetchData from '../components/FetchData';
+import { useState, useEffect } from 'react';
 
-function Sidebar() {
-  const [openFolders, setOpenFolders] = useState(['releases']);
+export default function DocsPage() {
+  // 1. STATE UNTUK MENYIMPAN DOKUMEN (Tersimpan di localStorage)
+  const [docs, setDocs] = useState(() => {
+    const savedDocs = localStorage.getItem('trello_wannabe_docs');
+    if (savedDocs) return JSON.parse(savedDocs);
+    return [
+      { id: 1, title: 'Demos', folder: 'Releases', updated: 'Monday at 8 AM' },
+      { id: 2, title: 'Project Roadmap', folder: 'Sprints', updated: 'Oct 27th at 9:23 PM' },
+    ];
+  });
 
-  const mainNav = [
-    { id: 1, label: 'Home', to: '/' },
-    { id: 2, label: 'Notifications', to: '/notifications' },
-    { id: 3, label: 'Goals', to: '/goals' },
-  ];
+  // 2. STATE UNTUK FORM INPUT
+  const [newTitle, setNewTitle] = useState("");
+  const [newFolder, setNewFolder] = useState("Uncategorized");
 
-  const spaces = [
-    { id: 1, label: 'Everything', to: '/spaces/all', letter: null, color: '' },
-    { id: 2, label: 'Development', to: '/spaces/development', letter: 'D', color: 'bg-[#7b68ee]' },
-    { id: 3, label: 'Marketing', to: '/spaces/marketing', letter: 'M', color: 'bg-[#ffc400]' },
-    { id: 4, label: 'Product', to: '/spaces/product', letter: 'P', color: 'bg-[#f2559f]', active: true },
-  ];
+  // 3. SIMPAN KE LOCALSTORAGE SETIAP KALI ADA PERUBAHAN
+  useEffect(() => {
+    localStorage.setItem('trello_wannabe_docs', JSON.stringify(docs));
+  }, [docs]);
 
-  const folders = [
-    {
-      id: 'releases',
-      label: 'Releases',
-      to: '/folders/releases',
-      docs: [{ id: 1, label: 'Demos', to: '/docs/demos' }],
-    },
-    { id: 'sprints', label: 'Sprints', to: '/folders/sprints', docs: [] },
-  ];
+  // 4. FUNGSI TAMBAH DOKUMEN
+  const handleAddDoc = (e) => {
+    e.preventDefault();
+    if (newTitle.trim() === "") return;
 
-  const toggleFolder = (id) =>
-    setOpenFolders((prev) =>
-      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
-    );
+    const newDoc = {
+      id: Date.now(),
+      title: newTitle,
+      folder: newFolder || "Uncategorized",
+      updated: 'Baru saja'
+    };
+
+    setDocs([...docs, newDoc]);
+    setNewTitle(""); // Reset form
+    setNewFolder("Uncategorized");
+  };
+
+  // 5. FUNGSI HAPUS DOKUMEN
+  const handleDeleteDoc = (id) => {
+    // Konfirmasi sebelum menghapus
+    if (window.confirm("Yakin mau hapus dokumen ini?")) {
+      setDocs(docs.filter(doc => doc.id !== id));
+    }
+  };
 
   return (
-    <aside className="flex h-full w-[220px] shrink-0 flex-col rounded-l-3xl bg-white pt-6">
-      {/* Brand */}
-     <Link to="/" className="mb-5 flex items-center gap-2 px-6">
-        <svg className="h-7 w-7 text-[#7b68ee]" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14h-2V7h2v10zm5 0h-2V7h2v10z"/>
-        </svg>
-        <span className="text-xl font-extrabold tracking-tight text-[#2a2e34]">Trello Wannabe</span>
-      </Link>
-
-      {/* Main nav */}
-      <nav className="flex flex-col gap-1 px-6 pb-4 text-[15px] text-[#3d424a]">
-        {mainNav.map((item) => (
-          <Link key={item.id} to={item.to} className="flex items-center gap-3 py-2 hover:text-[#7b68ee]">
-            <span className="h-4 w-4 rounded-sm bg-[#c9ccd3]" />
-            {item.label}
-          </Link>
-        ))}
-      </nav>
-
-      {/* Spaces */}
-      <div className="border-t border-[#eceef2] px-6 pt-4">
-        <div className="mb-3 flex items-center justify-between text-[15px] font-semibold text-[#2a2e34]">
-          Spaces
-          <span className="text-[#8b92a0]">&#8964;</span>
+    <div className="flex h-full w-full overflow-hidden">
+      
+      {/* --- SIDEBAR KHUSUS DOCS --- */}
+      <aside className="flex h-full w-[240px] shrink-0 flex-col border-r border-[#eceef2] bg-white pt-6">
+        <div className="px-6 pb-4">
+          <h2 className="text-lg font-bold text-gray-800">Spaces</h2>
+          <ul className="mt-4 space-y-3 text-sm text-gray-600">
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]"><span className="text-gray-400">•</span> Everything</li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]"><span className="w-4 h-4 bg-purple-500 text-white rounded text-[10px] flex items-center justify-center font-bold">D</span> Development</li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]"><span className="w-4 h-4 bg-yellow-500 text-white rounded text-[10px] flex items-center justify-center font-bold">M</span> Marketing</li>
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]"><span className="w-4 h-4 bg-pink-500 text-white rounded text-[10px] flex items-center justify-center font-bold">P</span> Product</li>
+          </ul>
         </div>
 
-        <ul className="flex flex-col gap-1">
-          {spaces.map((s) => (
-            <li key={s.id}>
-              <Link
-                to={s.to}
-                className={`flex items-center gap-3 py-2 text-[15px] hover:text-[#7b68ee] ${
-                  s.active ? 'font-semibold text-[#2a2e34]' : 'text-[#3d424a]'
-                }`}
-              >
-                {s.letter ? (
-                  <span
-                    className={`grid h-6 w-6 place-items-center rounded-md text-xs font-bold text-white ${s.color}`}
-                  >
-                    {s.letter}
-                  </span>
-                ) : (
-                  <span className="h-4 w-4 rounded-sm bg-[#c9ccd3]" />
-                )}
-                {s.label}
-              </Link>
+        <div className="px-6 pt-4 border-t border-gray-100">
+          <h2 className="text-lg font-bold text-gray-800 mb-3">Folders</h2>
+          <ul className="space-y-2 text-sm text-gray-600">
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]">
+              <span>📁</span> Releases
             </li>
-          ))}
-        </ul>
-
-        {/* Folder tree */}
-        <ul className="mt-4 flex flex-col gap-1 pl-3 text-[15px] text-[#3d424a]">
-          {folders.map((folder) => {
-            const isOpen = openFolders.includes(folder.id);
-            return (
-              <li key={folder.id}>
-                <div className="flex items-center gap-2 py-1.5">
-                  <button
-                    type="button"
-                    onClick={() => toggleFolder(folder.id)}
-                    className="w-3 text-[10px] text-[#8b92a0]"
-                    aria-label={`Toggle ${folder.label}`}
-                  >
-                    {isOpen ? '\u25BE' : '\u25B8'}
-                  </button>
-                  <span className="h-4 w-4 rounded-sm border border-[#9aa1ad]" />
-                  <Link to={folder.to} className="hover:text-[#7b68ee]">
-                    {folder.label}
-                  </Link>
-                </div>
-
-                {isOpen && (
-                  <ul className="ml-9 flex flex-col gap-1">
-                    {folder.docs.map((doc) => (
-                      <li key={doc.id}>
-                        <Link to={doc.to} className="flex items-center gap-2 py-1.5 hover:text-[#7b68ee]">
-                          <span className="h-4 w-3.5 rounded-sm border border-[#9aa1ad]" />
-                          {doc.label}
-                        </Link>
-                      </li>
-                    ))}
-                    <li>
-                      <Link to="/docs/new" className="flex items-center gap-2 py-1.5 hover:text-[#7b68ee]">
-                        <span className="w-3.5 text-center">+</span>
-                        New Doc
-                      </Link>
-                    </li>
-                  </ul>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </aside>
-  );
-}
-
-/* ---------- Top bar: filter + sort + view toggle ---------- */
-function TopBar({ view, setView }) {
-  const views = [
-    { id: 'list', label: 'List view' },
-    { id: 'grid', label: 'Grid view' },
-  ];
-
-  return (
-    <header className="flex items-center justify-between px-6 py-4">
-      <div className="flex h-10 w-[236px] items-center gap-2 rounded-md bg-[#eceef3] px-3">
-        <span className="h-3 w-3 rounded-full border border-[#8b92a0]" />
-        <input
-          type="text"
-          placeholder="Filter by name"
-          className="w-full bg-transparent text-xs text-[#2a2e34] outline-none placeholder:text-[#9aa1ad]"
-        />
-      </div>
-
-      <div className="flex items-center gap-6 text-sm text-[#6b7280]">
-        <button type="button" className="flex items-center gap-1">
-          Date viewed <span className="text-xs">&#8964;</span>
-        </button>
-
-        <div className="flex items-center gap-3">
-          {views.map((v) => (
-            <button
-              key={v.id}
-              type="button"
-              aria-label={v.label}
-              onClick={() => setView(v.id)}
-              className={`h-4 w-4 rounded-sm ${
-                view === v.id ? 'bg-[#2a2e34]' : 'bg-[#9aa1ad]'
-              }`}
-            />
-          ))}
+            <li className="flex items-center gap-2 cursor-pointer hover:text-[#7b68ee]">
+              <span>📁</span> Sprints
+            </li>
+          </ul>
         </div>
-      </div>
-    </header>
-  );
-}
+      </aside>
 
-/* ---------- Folders ---------- */
-function FolderSection() {
-  const folders = [
-    { id: 1, name: 'Releases', docs: 1, to: '/folders/releases', tint: 'bg-[#fff1e6]' },
-    { id: 2, name: 'Sprints', docs: 0, to: '/folders/sprints', tint: 'bg-[#eef0fb]' },
-  ];
-
-  return (
-    <section className="px-8 pt-4">
-      <h2 className="mb-5 text-base font-bold text-[#2a2e34]">Folders</h2>
-
-      <div className="flex flex-wrap gap-8">
-        {folders.map((f) => (
-          <article
-            key={f.id}
-            className="flex h-[54px] w-[318px] items-center justify-between rounded-lg bg-white px-3.5 shadow-[0_2px_8px_rgba(30,40,80,0.08)]"
-          >
-            <Link to={f.to} className="flex items-center gap-3">
-              <span className={`h-7 w-7 rounded-md ${f.tint}`} />
-              <span className="leading-tight">
-                <span className="block text-[13px] font-bold text-[#2a2e34]">{f.name}</span>
-                <span className="block text-[10px] text-[#8b92a0]">
-                  {f.docs} {f.docs === 1 ? 'Doc' : 'Docs'}
-                </span>
-              </span>
-            </Link>
-
-            <div className="flex items-center gap-3">
-              <button type="button" aria-label="Open folder" className="h-5 w-5 rounded bg-[#eceef3]" />
-              <button type="button" aria-label="More options" className="text-xs text-[#6b7280]">
-                &middot;&middot;&middot;
-              </button>
-            </div>
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-/* ---------- Docs table ---------- */
-function DocsTable() {
-  const docs = [
-    {
-      id: 1,
-      title: 'Demos',
-      to: '/docs/demos',
-      pages: 3,
-      location: 'Releases',
-      locationTo: '/folders/releases',
-      updated: 'Monday at 8 AM',
-    },
-    {
-      id: 2,
-      title: 'The Declaration of Independence',
-      to: '/docs/declaration-of-independence',
-      pages: 1,
-      location: 'Uncategorized',
-      locationTo: '/folders/uncategorized',
-      updated: 'Oct 27th at 9:23 PM',
-    },
-  ];
-
-  const grid = 'grid grid-cols-[minmax(0,2.2fr)_70px_minmax(0,1.4fr)_minmax(0,1.2fr)_40px] items-center';
-
-  return (
-    <section className="px-8 pt-12">
-      <h2 className="mb-5 text-base font-bold text-[#2a2e34]">Docs</h2>
-
-      <div className={`${grid} mb-2 px-3.5 text-[11px] font-bold text-[#2a2e34]`}>
-        <span>Docs</span>
-        <span>Pages</span>
-        <span>Located In</span>
-        <span className="text-right">Last Updated</span>
-        <span />
-      </div>
-
-      <ul className="flex flex-col gap-1.5">
-        {docs.map((doc) => (
-          <li
-            key={doc.id}
-            className={`${grid} h-11 rounded-md bg-white px-3.5 text-xs text-[#2a2e34] shadow-[0_1px_4px_rgba(30,40,80,0.06)]`}
-          >
-            <Link to={doc.to} className="flex items-center gap-3 hover:text-[#7b68ee]">
-              <span className="h-4 w-4 rounded-sm bg-[#c9ccd3]" />
-              <span className="truncate">{doc.title}</span>
-            </Link>
-
-            <span className="text-[#6b7280]">{doc.pages}</span>
-
-            <Link
-              to={doc.locationTo}
-              className="flex w-fit items-center gap-1.5 rounded bg-[#eceef3] px-2 py-1 text-[11px] font-semibold"
+      {/* --- KONTEN UTAMA DOCS --- */}
+      <main className="flex-1 overflow-y-auto bg-[#f8f9fc] p-8">
+        
+        <header className="mb-8">
+          <h1 className="text-2xl font-bold text-[#2a2e34] mb-4">Documents</h1>
+          
+          {/* FORM TAMBAH DOKUMEN BARU */}
+          <form onSubmit={handleAddDoc} className="flex flex-wrap gap-3 items-center bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <input 
+              type="text" 
+              placeholder="Judul dokumen baru..." 
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+              className="flex-1 min-w-[200px] border border-gray-300 px-4 py-2 rounded-lg text-sm outline-none focus:border-[#7b68ee]"
+              required
+            />
+            <select 
+              value={newFolder}
+              onChange={(e) => setNewFolder(e.target.value)}
+              className="border border-gray-300 px-4 py-2 rounded-lg text-sm outline-none focus:border-[#7b68ee] bg-white"
             >
-              <span className="h-3 w-3 rounded-sm border border-[#6b7280]" />
-              {doc.location}
-            </Link>
-
-            <span className="text-right text-[11px] text-[#9aa1ad]">{doc.updated}</span>
-
-            <button type="button" aria-label="More options" className="text-right text-[#9aa1ad]">
-              &middot;&middot;&middot;
+              <option value="Uncategorized">Uncategorized</option>
+              <option value="Releases">Releases</option>
+              <option value="Sprints">Sprints</option>
+            </select>
+            <button 
+              type="submit" 
+              className="bg-[#7b68ee] text-white px-6 py-2 rounded-lg text-sm font-bold hover:bg-purple-700 transition-colors shadow-sm"
+            >
+              + Add Document
             </button>
-          </li>
-        ))}
-      </ul>
-    </section>
-  );
-}
+          </form>
+        </header>
 
-/* ---------- Page ---------- */
-export default function DocsDashboard() {
-  const [view, setView] = useState('list');
+        {/* LIST DOKUMEN (Bukan Tabel Lagi) */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-b border-gray-200 text-xs font-bold text-gray-500 uppercase tracking-wider">
+            <div className="flex-1">Document Name</div>
+            <div className="w-32">Located In</div>
+            <div className="w-40 text-right">Last Updated</div>
+            <div className="w-16 text-center">Action</div>
+          </div>
 
-  return (
-    <div className="min-h-screen bg-[#f1f2fb] p-6 font-sans">
-      <div className="mx-auto flex h-[calc(100vh-48px)] min-h-[720px] max-w-[1150px] overflow-hidden rounded-3xl bg-[#f6f7fb] shadow-xl">
-        <Sidebar />
-        <main className="flex-1 overflow-y-auto">
-          <TopBar view={view} setView={setView} />
-          <FolderSection />
-          <DocsTable />
-        </main>
-      </div>
+          <ul className="divide-y divide-gray-100">
+            {docs.map((doc) => (
+              <li key={doc.id} className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors">
+                <div className="flex-1 flex items-center gap-3">
+                  <span className="text-xl">📄</span>
+                  <span className="font-bold text-[#2a2e34]">{doc.title}</span>
+                </div>
+                <div className="w-32">
+                  <span className="text-xs font-bold bg-gray-100 text-gray-600 px-2 py-1 rounded">
+                    {doc.folder}
+                  </span>
+                </div>
+                <div className="w-40 text-right text-xs text-gray-400 font-medium">
+                  {doc.updated}
+                </div>
+                <div className="w-16 text-center">
+                  <button 
+                    onClick={() => handleDeleteDoc(doc.id)}
+                    className="text-red-400 hover:text-red-600 transition-colors p-2"
+                    title="Hapus Dokumen"
+                  >
+                    {/* Ikon Tempat Sampah SVG */}
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          {docs.length === 0 && (
+            <div className="text-center py-12 text-gray-500 text-sm">
+              Belum ada dokumen. Silakan tambah di atas.
+            </div>
+          )}
+        </div>
+
+      </main>
     </div>
   );
 }
